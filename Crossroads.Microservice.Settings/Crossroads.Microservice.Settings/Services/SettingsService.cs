@@ -119,13 +119,12 @@ namespace Crossroads.Microservice.Services
         {
             foreach(var setting in settings)
             {
-                var success = appSettings.TryAdd(setting.Key, setting.Value);
-                if (!success)
+                if (appSettings.ContainsKey(setting.Key))
                 {
                     AlertDuplicateKey(setting.Key, source);
-                    appSettings[setting.Key] = setting.Value;
-                    _logger.Warn("Overwrote key: " + setting.Key + " with value from " + source);
                 }
+
+                appSettings[setting.Key] = setting.Value;
             }
 
             _logger.Info("Added settings from " + source);
@@ -200,7 +199,7 @@ namespace Crossroads.Microservice.Services
 
         private void AlertDuplicateKey(string key, string source)
         {
-            _logger.Warn("Duplicate key found: " + key + ". Did NOT overwrite with source: " + source);
+            _logger.Warn("Duplicate key found: " + key + ". Overwrote with source: " + source);
         }
 
         private void AlertKeyNotFound(string key)
