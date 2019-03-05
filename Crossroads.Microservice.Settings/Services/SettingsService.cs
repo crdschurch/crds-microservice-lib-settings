@@ -9,6 +9,7 @@ using NLog.Config;
 using NLog.Targets;
 using NLog.Web;
 using System.Security;
+using System.Diagnostics.Contracts;
 
 namespace Crossroads.Microservice.Services
 {
@@ -57,6 +58,9 @@ namespace Crossroads.Microservice.Services
 
         public string GetSecret(string key)
         {
+            //TODO: See how this works in a test
+            Contract.Requires(!string.IsNullOrEmpty(key), "Key can not be null or empty");
+
             if (appSettings.TryGetValue(key, out string value))
             {
                 return value;
@@ -70,7 +74,6 @@ namespace Crossroads.Microservice.Services
 
         public bool TryGetSecret(string key, out string value)
         {
-
             var result = appSettings.TryGetValue(key, out string settingValue);
 
             value = settingValue;
@@ -78,20 +81,35 @@ namespace Crossroads.Microservice.Services
             return result;
         }
 
+
         public void AddSettings(Dictionary<string, string> settings, string source)
         {
+            //TODO: Test for nulls
+
             foreach (var setting in settings)
             {
-                if (appSettings.ContainsKey(setting.Key))
-                {
-                    AlertDuplicateKey(setting.Key, source);
-
-                }
-                //TODO: Check to see what happens when this exists
-                appSettings[setting.Key] = setting.Value;
+                AddSetting(setting.Key, setting.Value, null);
             }
 
             _logger.Info("Added settings from " + source);
+
+        }
+
+        public void AddSetting(string key, string value, string source)
+        {
+            if (appSettings.ContainsKey(key))
+            {
+                AlertDuplicateKey(key, source);
+
+            }
+            //TODO: Check to see what happens when this exists
+            appSettings[key] = value;
+
+            if (!string.IsNullOrEmpty(source))
+            {
+                _logger.Info("Added setting from " + source);
+            }
+
         }
 
         private NLog.Logger GetLogger()
@@ -156,8 +174,14 @@ namespace Crossroads.Microservice.Services
             var envSettings = new Dictionary<string, string>();
 
             try
-            {
-                envSettings = (Dictionary<string, string>)Environment.GetEnvironmentVariables();
+            { 
+                var envVars = Environment.GetEnvironmentVariables();
+
+                foreach(DictionaryEntry envVar in envVars)
+                {
+                    envSettings.Add(envVar.Key.ToString(), envVar.Value.ToString());
+                }
+
             }
             catch(SecurityException ex)
             {
