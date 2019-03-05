@@ -8,25 +8,29 @@ using System.Collections;
 using NLog.Config;
 using NLog.Targets;
 using NLog.Web;
+using System.Security;
 
 namespace Crossroads.Microservice.Services
 {
     public class SettingsService: ISettingsService
     {
+        //TODO: Make sure this is testable = interface
         private static NLog.Logger _logger;
 
         private Dictionary<string,string> appSettings;
 
         private static readonly HttpClient client = new HttpClient();
 
-        public SettingsService(NLog.Logger logger = null)
+        public SettingsService(NLog.ILogger logger = null)
         { 
+            // TODO: Double check null is the only way we need to check for this / Check if it is valid? 
             if (logger == null)
             {
                 logger = GetLogger();
             }
 
-            _logger = logger;
+            //TODO: check to make sure this is legit
+            _logger = (NLog.Logger)logger;
 
             appSettings = new Dictionary<string, string>();
 
@@ -36,21 +40,49 @@ namespace Crossroads.Microservice.Services
             //Check for env, if it doesn't exist default to local
             string crdsEnv = GetCrdsEnv();
 
+            //TODO: refactor for clarity 
             if (VaultCredentialsAvailable())
             {
-                var secretServiceCommonSettings = GetSettingsFromSecretService(crdsEnv, "common");
+                var secretServiceCommonSettings = GetSettingsFromVault(crdsEnv, "common");
                 AddSettings(secretServiceCommonSettings, "Vault Common");
 
                 var nameOfThisApplication = System.Reflection.Assembly.GetEntryAssembly().GetName().Name;
-                var secretServiceAppSettings = GetSettingsFromSecretService(crdsEnv, nameOfThisApplication);
+                var secretServiceAppSettings = GetSettingsFromVault(crdsEnv, nameOfThisApplication);
                 AddSettings(secretServiceAppSettings, "Vault App");
+
+                //TODO: This is gross, make it less gross
                 AddSettings(new Dictionary<string, string> { { "APP_NAME", nameOfThisApplication } }, "App Name");
             }
         }
 
-        public void AddAdditionalSettings(Dictionary<string, string> settings, string source)
+        //TODO: add 'TryGetSecret'
+        public string GetSecret(string key)
         {
-            AddSettings(settings, source);
+            if (appSettings.TryGetValue(key, out string value))
+            {
+                return value;
+            }
+            else
+            {
+                AlertKeyNotFound(key);
+                return null;
+            }
+        }
+
+        public void AddSettings(Dictionary<string, string> settings, string source)
+        {
+            foreach (var setting in settings)
+            {
+                if (appSettings.ContainsKey(setting.Key))
+                {
+                    AlertDuplicateKey(setting.Key, source);
+
+                }
+                //TODO: Check to see what happens when this exists
+                appSettings[setting.Key] = setting.Value;
+            }
+
+            _logger.Info("Added settings from " + source);
         }
 
         private NLog.Logger GetLogger()
@@ -71,22 +103,12 @@ namespace Crossroads.Microservice.Services
             return NLogBuilder.ConfigureNLog(loggingConfig).GetCurrentClassLogger();
         }
 
-        public string GetSecret(string key)
-        {
-            if (appSettings.TryGetValue(key, out string value))
-            {
-                return value;
-            }
-            else
-            {
-                AlertKeyNotFound(key);
-                return null;
-            }
-        }
+
 
         private bool VaultCredentialsAvailable()
         {
             bool vaultCredentialsAvailable = true;
+
             if (GetSecret("VAULT_ROLE_ID") == null)
             {
                 vaultCredentialsAvailable = false;
@@ -99,13 +121,17 @@ namespace Crossroads.Microservice.Services
                 _logger.Warn("VAULT_SECRET_ID not set, unable to get vault secrets");
             }
 
+
+
             return vaultCredentialsAvailable;
         }
 
         private string GetCrdsEnv()
         {
             //Check for env, if it doesn't exist default to local
-            string crdsEnv;
+            string crdsEnv = "local";
+
+            //TODO: replace this use dogfood
             if (!appSettings.TryGetValue("CRDS_ENV", out crdsEnv))
             {
                 crdsEnv = "local";
@@ -115,20 +141,6 @@ namespace Crossroads.Microservice.Services
             return crdsEnv;
         }
 
-        private void AddSettings(Dictionary<string,string> settings, string source)
-        {
-            foreach(var setting in settings)
-            {
-                if (appSettings.ContainsKey(setting.Key))
-                {
-                    AlertDuplicateKey(setting.Key, source);
-                }
-
-                appSettings[setting.Key] = setting.Value;
-            }
-
-            _logger.Info("Added settings from " + source);
-        }
 
         private Dictionary<string, string> GetSettingsFromEnvironmentVariables()
         {
@@ -136,22 +148,37 @@ namespace Crossroads.Microservice.Services
 
             try
             {
-                var envVars = Environment.GetEnvironmentVariables();
-
-                foreach (DictionaryEntry envVar in envVars)
-                {
-                    envSettings.Add(envVar.Key.ToString(), envVar.Value.ToString());
-                }
+                envSettings = (Dictionary<string, string>)Environment.GetEnvironmentVariables();
             }
-            catch(Exception ex)
+            catch(SecurityException ex)
             {
+                //TODO: Hey, there were issues reading env vars, woops
+                var foo = ex;
+            }
+            catch(OutOfMemoryException ex) 
+            {
+                //TODO: Hey, there were issues reading env vars, woops
                 var foo = ex;
             }
 
             return envSettings;
         }
 
-        private Dictionary<string, string> GetSettingsFromSecretService(string env, string bucket)
+        private Dictionary<string, string> GetCommonSettingsFromVault()
+        {
+            var vaultSecrets = new Dictionary<string, string>();
+
+            return vaultSecrets;
+        }
+
+        private Dictionary<string, string> GetApplicationSettingsFromVault()
+        {
+            var vaultSecrets = new Dictionary<string, string>();
+
+            return vaultSecrets;
+        }
+
+        private Dictionary<string, string> GetSettingsFromVault(string env, string bucket)
         {
             var vaultSecrets = new Dictionary<string, string>();
 
