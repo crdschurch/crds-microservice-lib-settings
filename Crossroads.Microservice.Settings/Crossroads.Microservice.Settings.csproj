@@ -2,6 +2,20 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <PackageLicenseUrl>https://opensource.org/licenses/BSD-3-Clause</PackageLicenseUrl>
+    <PackageProjectUrl>https://nuget.org/packages/Crossroads.Microservice.Settings</PackageProjectUrl>
+    <Title>Crossroads.Microservice.Settings</Title>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/crdschurch/crds-microservice-lib-settings</RepositoryUrl>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Description>C# .Net library for loading application settings from a variety of sources (env variables, vault) and combining them into a single accessible settings object.</Description>
+    <Company>Crossroads Church</Company>
+    <Copyright>Copyright ©  2019 Crossroads Church</Copyright>
+    <Version>1.0.0</Version>
+    <Authors>Crossroads Church</Authors>
+    <PackageIconUrl>https://s3.amazonaws.com/crossroads-media/images/nuget-icon.png</PackageIconUrl>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
