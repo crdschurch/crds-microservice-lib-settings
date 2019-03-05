@@ -55,7 +55,6 @@ namespace Crossroads.Microservice.Services
             }
         }
 
-        //TODO: add 'TryGetSecret'
         public string GetSecret(string key)
         {
             if (appSettings.TryGetValue(key, out string value))
@@ -67,6 +66,16 @@ namespace Crossroads.Microservice.Services
                 AlertKeyNotFound(key);
                 return null;
             }
+        }
+
+        public bool TryGetSecret(string key, out string value)
+        {
+
+            var result = appSettings.TryGetValue(key, out string settingValue);
+
+            value = settingValue;
+
+            return result;
         }
 
         public void AddSettings(Dictionary<string, string> settings, string source)
