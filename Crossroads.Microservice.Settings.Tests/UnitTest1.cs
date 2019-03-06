@@ -5,7 +5,18 @@ namespace Crossroads.Microservice.Settings.Tests
 {
     public class UnitTest1
     {
-        //TODO: Test constructor
+        //Test constructor
+
+        [Fact]
+        public void CreateService_NullLogger()
+        {
+            //TODO:
+        }
+
+        public void CreateService_PassLogger()
+        {
+            //TODO:
+        }
 
         //string GetSetting(string key);
         [Fact]
@@ -107,6 +118,48 @@ namespace Crossroads.Microservice.Settings.Tests
             bool success = service.TryGetSetting("TEST_KEY", out setting);
 
             Assert.True(success);
+        }
+
+        [Fact]
+        public void AddSettings_AddOneSetting_GetValue()
+        {
+            //TODO:
+        }
+
+        [Fact]
+        public void AddSettings_AddTwoSettings_GetValues()
+        {
+            //TODO:
+        }
+
+        [Fact]
+        public void AddSettings_OverwriteSetting_GetOverwriteValue()
+        {
+            //TODO:   
+        }
+
+        [Fact]
+        public void AddSettings_EmptySettingsDictionary_DoesNotBreak()
+        {
+            //TODO:
+        }
+
+        [Fact]
+        public void AddSettings_NullDictionary_ThrowsException()
+        {
+            //TODO:
+        }
+
+        [Fact]
+        public void AddSettings_NullSource_ThrowsException()
+        {
+            //TODO:
+        }
+
+        [Fact]
+        public void AddSettings_EmptyStringSource_ThrowsException()
+        {
+            //TODO:
         }
 
         //void AddSettings(Dictionary<string, string> settings, string source);
