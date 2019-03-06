@@ -16,7 +16,7 @@ namespace Crossroads.Microservice.Services
     public class SettingsService: ISettingsService
     {
         //TODO: Make sure this is testable = interface
-        private static NLog.Logger _logger;
+        private static NLog.ILogger _logger;
 
         private Dictionary<string,string> appSettings;
 
@@ -51,8 +51,7 @@ namespace Crossroads.Microservice.Services
                 var secretServiceAppSettings = GetSettingsFromVault(crdsEnv, nameOfThisApplication);
                 AddSettings(secretServiceAppSettings, "Vault App");
 
-                //TODO: This is gross, make it less gross
-                AddSettings(new Dictionary<string, string> { { "APP_NAME", nameOfThisApplication } }, "App Name");
+                AddSetting("APP_NAME", nameOfThisApplication, "App Name");
             }
         }
 
