@@ -34,12 +34,14 @@ namespace Crossroads.Microservice.Settings.Tests
         [Fact]
         public void GetSecret_AddSetting_GetSecret_ReturnsValue()
         {
+            string testValue = "test value";
+
             var service = new SettingsService();
-            service.AddSetting("TEST_KEY", "test value", "test source");
+            service.AddSetting("TEST_KEY", testValue, "test source");
 
             var secret = service.GetSecret("TEST_KEY");
 
-            Assert.Equal("test_value", secret);
+            Assert.Equal(testValue, secret);
         }
 
         //bool TryGetSecret(string key, out string secret);
@@ -82,13 +84,15 @@ namespace Crossroads.Microservice.Settings.Tests
         [Fact]
         public void TryGetSecret_AddSetting_GetSecret_ReturnsValue()
         {
+            string testValue = "test value";
+
             var service = new SettingsService();
-            service.AddSetting("TEST_KEY", "test value", "test source");
+            service.AddSetting("TEST_KEY", testValue, "test source");
 
             string secret;
             bool success = service.TryGetSecret("TEST_KEY", out secret);
 
-            Assert.Equal("test_value", secret);
+            Assert.Equal(testValue, secret);
         }
 
         [Fact]
