@@ -2,6 +2,9 @@ using System;
 using Xunit;
 using Crossroads.Microservice.Services;
 using System.Collections.Generic;
+using NLog.Config;
+using NLog.Targets;
+using NLog.Web;
 
 namespace Crossroads.Microservice.Settings.Tests
 {
@@ -13,11 +16,30 @@ namespace Crossroads.Microservice.Settings.Tests
         public void CreateService_NullLogger()
         {
             //TODO:
+            var service = new SettingsService(null);
         }
 
+        [Fact]
         public void CreateService_PassLogger()
         {
-            //TODO:
+            var loggingConfig = new LoggingConfiguration();
+
+            var consoleTarget = new ColoredConsoleTarget("console")
+            {
+                Layout = @"${date:format=HH\:mm\:ss} ${level} ${message} ${exception:format=ToString}"
+            };
+            loggingConfig.AddTarget("console", consoleTarget);
+
+            //Log everything in development
+            loggingConfig.AddRuleForAllLevels(consoleTarget, "*");
+
+            NLog.LogManager.Configuration = loggingConfig;
+
+            var logger = NLogBuilder.ConfigureNLog(loggingConfig).GetCurrentClassLogger();
+
+            var service = new SettingsService(logger);
+
+            //TODO: How do we actual test this works?
         }
 
         //string GetSetting(string key);
@@ -33,7 +55,10 @@ namespace Crossroads.Microservice.Settings.Tests
         [Fact]
         public void GetSetting_EmptyStringKey_ThrowsException()
         {
-            //TODO:
+            var service = new SettingsService();
+
+            //TODO: 
+            Assert.ThrowsAny<Exception>(() => service.GetSetting(""));
         }
 
         [Fact]
@@ -64,13 +89,19 @@ namespace Crossroads.Microservice.Settings.Tests
         {
             var service = new SettingsService();
 
-            //TODO:
+            string value;
+
+            Assert.ThrowsAny<Exception>(() => service.TryGetSetting(null, out value)); //TODO:
         }
 
         [Fact]
         public void TryGetSetting_EmptyStringKey_ThrowsException()
         {
-            //TODO:
+            var service = new SettingsService();
+
+            string value;
+
+            Assert.ThrowsAny<Exception>(() => service.TryGetSetting("", out value)); //TODO:
         }
 
         [Fact]
@@ -289,7 +320,7 @@ namespace Crossroads.Microservice.Settings.Tests
         public void AddSetting_NullKey_ThrowsException()
         {
             var service = new SettingsService();
-            Assert.Throws<Exception>(() => { service.AddSetting(null, "value" "test source"); }); //TODO:
+            Assert.Throws<Exception>(() => { service.AddSetting(null, "value", "test source"); }); //TODO:
         }
 
         [Fact]
