@@ -224,5 +224,100 @@ namespace Crossroads.Microservice.Settings.Tests
         }
 
         //void AddSetting(string key, string value, string source);
+        [Fact]
+        public void AddSetting_AddOneSetting_GetValue()
+        {
+            string testValue = "test value";
+            string testKey = "TEST_KEY";
+
+            var service = new SettingsService();
+
+            service.AddSetting(testKey, testValue, "test source");
+
+            var setting = service.GetSetting(testKey);
+
+            Assert.Equal(testValue, setting);
+        }
+
+        [Fact]
+        public void AddSetting_AddTwoSettings_GetValues()
+        {
+            string testValueOne = "test value";
+            string testKeyOne = "TEST_KEY";
+
+            string testValueTwo = "test value2";
+            string testKeyTwo = "TEST_KEY2";
+
+            var service = new SettingsService();
+
+            service.AddSetting(testKeyOne, testValueOne, "test source");
+            service.AddSetting(testKeyTwo, testValueTwo, "test source");
+
+            var settingOne = service.GetSetting(testKeyOne);
+            var settingTwo = service.GetSetting(testKeyTwo);
+
+            Assert.Equal(testValueOne, settingOne);
+            Assert.Equal(testValueTwo, settingTwo);
+        }
+
+        [Fact]
+        public void AddSetting_OverwriteSetting_GetOverwriteValue()
+        {
+            string testValueOne = "test value";
+            string testKeyOne = "TEST_KEY";
+
+            string testValueTwo = "test value2";
+            string testKeyTwo = "TEST_KEY2";
+
+            var service = new SettingsService();
+
+            service.AddSetting(testKeyOne, testValueOne, "test source");
+            service.AddSetting(testKeyTwo, testValueTwo, "test source");
+
+            string overwriteTestValueOne = "test value one";
+
+            service.AddSetting(testKeyOne, overwriteTestValueOne, "test source");
+
+            var settingOne = service.GetSetting(testKeyOne);
+            var settingTwo = service.GetSetting(testKeyTwo);
+
+            Assert.Equal(overwriteTestValueOne, settingOne);
+            Assert.Equal(testValueTwo, settingTwo);
+        }
+
+        [Fact]
+        public void AddSetting_NullKey_ThrowsException()
+        {
+            var service = new SettingsService();
+            Assert.Throws<Exception>(() => { service.AddSetting(null, "value" "test source"); }); //TODO:
+        }
+
+        [Fact]
+        public void AddSetting_NullValue_ThrowsException()
+        {
+            var service = new SettingsService();
+            Assert.Throws<Exception>(() => { service.AddSetting("key", null, "test source"); }); //TODO:
+        }
+
+        [Fact]
+        public void AddSetting_NullSource_ThrowsException()
+        {
+            var service = new SettingsService();
+            Assert.Throws<Exception>(() => { service.AddSetting("key", "value", null); }); //TODO:
+        }
+
+        [Fact]
+        public void AddSetting_EmptyStringKey_ThrowsException()
+        {
+            var service = new SettingsService();
+            Assert.Throws<Exception>(() => { service.AddSetting("", "value", "test source"); }); //TODO:
+        }
+
+        [Fact]
+        public void AddSetting_EmptyStringSource_ThrowsException()
+        {
+            var service = new SettingsService();
+            Assert.Throws<Exception>(() => { service.AddSetting("key", "value", ""); }); //TODO:
+        }
     }
 }
