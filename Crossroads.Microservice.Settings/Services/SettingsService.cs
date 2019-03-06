@@ -55,7 +55,7 @@ namespace Crossroads.Microservice.Services
             }
         }
 
-        public string GetSecret(string key)
+        public string GetSetting(string key)
         {
             //TODO: See how this works in a test
             Contract.Requires(!string.IsNullOrEmpty(key), "Key can not be null or empty");
@@ -71,7 +71,7 @@ namespace Crossroads.Microservice.Services
             }
         }
 
-        public bool TryGetSecret(string key, out string value)
+        public bool TryGetSetting(string key, out string value)
         {
             var result = appSettings.TryGetValue(key, out string settingValue);
 
@@ -135,13 +135,13 @@ namespace Crossroads.Microservice.Services
         {
             bool vaultCredentialsAvailable = true;
 
-            if (GetSecret("VAULT_ROLE_ID") == null)
+            if (GetSetting("VAULT_ROLE_ID") == null)
             {
                 vaultCredentialsAvailable = false;
                 _logger.Warn("VAULT_ROLE_ID not set, unable to get vault secrets");
             }
 
-            if (GetSecret("VAULT_SECRET_ID") == null)
+            if (GetSetting("VAULT_SECRET_ID") == null)
             {
                 vaultCredentialsAvailable = false;
                 _logger.Warn("VAULT_SECRET_ID not set, unable to get vault secrets");
@@ -216,8 +216,8 @@ namespace Crossroads.Microservice.Services
 
             try
             {
-                var vaultRoleId = GetSecret("VAULT_ROLE_ID");
-                var vaultSecretId = GetSecret("VAULT_SECRET_ID");
+                var vaultRoleId = GetSetting("VAULT_ROLE_ID");
+                var vaultSecretId = GetSetting("VAULT_SECRET_ID");
                 var vaultPath = GetVaultPath();
 
                 IAuthMethodInfo authMethod = new AppRoleAuthMethodInfo(vaultRoleId, vaultSecretId);
@@ -245,7 +245,7 @@ namespace Crossroads.Microservice.Services
 
         private string GetVaultPath()
         {
-            string vaultPath = GetSecret("VAULT_URI");
+            string vaultPath = GetSetting("VAULT_URI");
 
             if (vaultPath == null)
             {

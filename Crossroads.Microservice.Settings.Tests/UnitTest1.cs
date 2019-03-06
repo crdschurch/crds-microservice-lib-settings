@@ -5,48 +5,50 @@ namespace Crossroads.Microservice.Settings.Tests
 {
     public class UnitTest1
     {
-        //string GetSecret(string key);
+        //TODO: Test constructor
+
+        //string GetSetting(string key);
         [Fact]
-        public void GetSecret_NullKey_ThrowsException()
+        public void GetSetting_NullKey_ThrowsException()
         {
             var service = new SettingsService();
 
             //TODO: 
-            Assert.ThrowsAny<Exception>(() => service.GetSecret(null));
+            Assert.ThrowsAny<Exception>(() => service.GetSetting(null));
         }
 
         [Fact]
-        public void GetSecret_EmptyStringKey_ThrowsException()
+        public void GetSetting_EmptyStringKey_ThrowsException()
         {
             //TODO:
         }
 
         [Fact]
-        public void GetSecret_NoKeyInSecrets_ReturnsNull()
+        public void GetSetting_NoKeyInSettings_ReturnsNull()
         {
             var service = new SettingsService();
 
-            var secret = service.GetSecret("THIS_KEY_DOES_NOT_EXIST");
+            var setting = service.GetSetting("THIS_KEY_DOES_NOT_EXIST");
 
-            Assert.Null(secret);
+            Assert.Null(setting);
         }
 
         [Fact]
-        public void GetSecret_AddSetting_GetSecret_ReturnsValue()
+        public void GetSetting_AddSetting_GetSetting_ReturnsValue()
         {
             string testValue = "test value";
 
             var service = new SettingsService();
             service.AddSetting("TEST_KEY", testValue, "test source");
 
-            var secret = service.GetSecret("TEST_KEY");
+            var setting = service.GetSetting("TEST_KEY");
 
-            Assert.Equal(testValue, secret);
+            Assert.Equal(testValue, setting);
         }
 
-        //bool TryGetSecret(string key, out string secret);
+        //bool TryGetSetting(string key, out string setting);
         [Fact]
-        public void TryGetSecret_NullKey_ThrowsException()
+        public void TryGetSetting_NullKey_ThrowsException()
         {
             var service = new SettingsService();
 
@@ -54,55 +56,55 @@ namespace Crossroads.Microservice.Settings.Tests
         }
 
         [Fact]
-        public void TryGetSecret_EmptyStringKey_ThrowsException()
+        public void TryGetSetting_EmptyStringKey_ThrowsException()
         {
             //TODO:
         }
 
         [Fact]
-        public void TryGetSecret_NoKeyInSecrets_HasNullAsOut()
+        public void TryGetSetting_NoKeyInSettings_HasNullAsOut()
         {
             var service = new SettingsService();
 
-            string secret;
-            service.TryGetSecret("THIS_KEY_DOES_NOT_EXIST", out secret);
+            string setting;
+            service.TryGetSetting("THIS_KEY_DOES_NOT_EXIST", out setting);
 
-            Assert.Null(secret);
+            Assert.Null(setting);
         }
 
         [Fact]
-        public void TryGetSecret_NoKeyInSecrets_ReturnsFalse()
+        public void TryGetSetting_NoKeyInSettings_ReturnsFalse()
         {
             var service = new SettingsService();
 
-            string secret;
-            bool sucess = service.TryGetSecret("THIS_KEY_DOES_NOT_EXIST", out secret);
+            string setting;
+            bool sucess = service.TryGetSetting("THIS_KEY_DOES_NOT_EXIST", out setting);
 
             Assert.False(sucess);
         }
 
         [Fact]
-        public void TryGetSecret_AddSetting_GetSecret_ReturnsValue()
+        public void TryGetSetting_AddSetting_GetSetting_ReturnsValue()
         {
             string testValue = "test value";
 
             var service = new SettingsService();
             service.AddSetting("TEST_KEY", testValue, "test source");
 
-            string secret;
-            bool success = service.TryGetSecret("TEST_KEY", out secret);
+            string setting;
+            bool success = service.TryGetSetting("TEST_KEY", out setting);
 
-            Assert.Equal(testValue, secret);
+            Assert.Equal(testValue, setting);
         }
 
         [Fact]
-        public void TryGetSecret_AddSetting_GetSecret_Returns_True()
+        public void TryGetSetting_AddSetting_GetSetting_Returns_True()
         {
             var service = new SettingsService();
             service.AddSetting("TEST_KEY", "test value", "test source");
 
-            string secret;
-            bool success = service.TryGetSecret("TEST_KEY", out secret);
+            string setting;
+            bool success = service.TryGetSetting("TEST_KEY", out setting);
 
             Assert.True(success);
         }
