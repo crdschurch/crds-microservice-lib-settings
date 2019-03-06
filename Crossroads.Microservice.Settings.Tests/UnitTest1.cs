@@ -1,6 +1,8 @@
 using System;
 using Xunit;
 using Crossroads.Microservice.Services;
+using System.Collections.Generic;
+
 namespace Crossroads.Microservice.Settings.Tests
 {
     public class UnitTest1
@@ -57,7 +59,6 @@ namespace Crossroads.Microservice.Settings.Tests
             Assert.Equal(testValue, setting);
         }
 
-        //bool TryGetSetting(string key, out string setting);
         [Fact]
         public void TryGetSetting_NullKey_ThrowsException()
         {
@@ -111,8 +112,10 @@ namespace Crossroads.Microservice.Settings.Tests
         [Fact]
         public void TryGetSetting_AddSetting_GetSetting_Returns_True()
         {
+            string testValue = "test value";
+
             var service = new SettingsService();
-            service.AddSetting("TEST_KEY", "test value", "test source");
+            service.AddSetting("TEST_KEY", testValue, "test source");
 
             string setting;
             bool success = service.TryGetSetting("TEST_KEY", out setting);
@@ -123,46 +126,103 @@ namespace Crossroads.Microservice.Settings.Tests
         [Fact]
         public void AddSettings_AddOneSetting_GetValue()
         {
-            //TODO:
+            string testValue = "test value";
+            string testKey = "TEST_KEY";
+
+            var service = new SettingsService();
+
+            var settings = new Dictionary<string, string> {{ testKey, testValue }};
+
+            service.AddSettings(settings, "test source");
+
+            var setting = service.GetSetting(testKey);
+
+            Assert.Equal(testValue, setting);
         }
 
         [Fact]
         public void AddSettings_AddTwoSettings_GetValues()
         {
-            //TODO:
+            string testValueOne = "test value";
+            string testKeyOne = "TEST_KEY";
+
+            string testValueTwo = "test value2";
+            string testKeyTwo = "TEST_KEY2";
+
+            var service = new SettingsService();
+
+            var settings = new Dictionary<string, string> { { testKeyOne, testValueOne }, { testKeyTwo, testValueTwo} };
+
+            service.AddSettings(settings, "test source");
+
+            var settingOne = service.GetSetting(testKeyOne);
+            var settingTwo = service.GetSetting(testKeyTwo);
+
+            Assert.Equal(testValueOne, settingOne);
+            Assert.Equal(testValueTwo, settingTwo);
         }
 
         [Fact]
         public void AddSettings_OverwriteSetting_GetOverwriteValue()
         {
-            //TODO:   
+            string testValueOne = "test value";
+            string testKeyOne = "TEST_KEY";
+
+            string testValueTwo = "test value2";
+            string testKeyTwo = "TEST_KEY2";
+
+            var service = new SettingsService();
+
+            var settings = new Dictionary<string, string> { { testKeyOne, testValueOne }, { testKeyTwo, testValueTwo } };
+
+            service.AddSettings(settings, "test source");
+
+            string overwriteTestValueOne = "test value one";
+
+            var settingsOverwrite = new Dictionary<string, string> { { testKeyOne, overwriteTestValueOne } };
+
+            service.AddSettings(settingsOverwrite, "overwrite source");
+
+            var settingOne = service.GetSetting(testKeyOne);
+            var settingTwo = service.GetSetting(testKeyTwo);
+
+            Assert.Equal(overwriteTestValueOne, settingOne);
+            Assert.Equal(testValueTwo, settingTwo);
         }
 
         [Fact]
         public void AddSettings_EmptySettingsDictionary_DoesNotBreak()
         {
-            //TODO:
+            var service = new SettingsService();
+
+            var settings = new Dictionary<string, string> ();
+
+            service.AddSettings(settings, "test source");
         }
 
         [Fact]
         public void AddSettings_NullDictionary_ThrowsException()
         {
-            //TODO:
+            var service = new SettingsService();
+            Assert.Throws<Exception>(() => { service.AddSettings(null, "test source"); }); //TODO:
         }
 
         [Fact]
         public void AddSettings_NullSource_ThrowsException()
         {
-            //TODO:
+            var service = new SettingsService();
+            var settings = new Dictionary<string, string>();
+            Assert.Throws<Exception>(() => { service.AddSettings(settings, null); }); //TODO:
         }
 
         [Fact]
         public void AddSettings_EmptyStringSource_ThrowsException()
         {
-            //TODO:
+            var service = new SettingsService();
+            var settings = new Dictionary<string, string>();
+            Assert.Throws<Exception>(() => { service.AddSettings(settings, ""); }); //TODO:
         }
 
-        //void AddSettings(Dictionary<string, string> settings, string source);
         //void AddSetting(string key, string value, string source);
     }
 }
