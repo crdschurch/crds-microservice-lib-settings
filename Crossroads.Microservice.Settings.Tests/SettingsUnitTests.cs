@@ -1,6 +1,5 @@
 using System;
 using Xunit;
-using Crossroads.Microservice.Services;
 using System.Collections.Generic;
 using Crossroads.Microservice.Settings.Services;
 using NLog.Config;
@@ -11,7 +10,6 @@ namespace Crossroads.Microservice.Settings.Tests
 {
     public class UnitTest1
     {
-        //Test constructor
 
         [Fact]
         public void CreateService_NullLogger()
@@ -43,25 +41,14 @@ namespace Crossroads.Microservice.Settings.Tests
             //TODO: How do we actual test this works?
         }
 
-        //string GetSetting(string key);
         [Fact]
         public void GetSetting_NullKey_ThrowsException()
         {
             var service = new SettingsService();
 
-            //TODO: 
             Assert.ThrowsAny<Exception>(() => service.GetSetting(null));
         }
-        /*
-        [Fact]
-        public void GetSetting_EmptyStringKey_ThrowsException()
-        {
-            var service = new SettingsService();
 
-            //TODO: 
-            Assert.ThrowsAny<Exception>(() => service.GetSetting(""));
-        }
-        */
         [Fact]
         public void GetSetting_NoKeyInSettings_ReturnsNull()
         {
@@ -95,17 +82,6 @@ namespace Crossroads.Microservice.Settings.Tests
             Assert.ThrowsAny<Exception>(() => service.TryGetSetting(null, out value)); //TODO:
         }
 
-        /*
-        [Fact]
-        public void TryGetSetting_EmptyStringKey_ThrowsException()
-        {
-            var service = new SettingsService();
-
-            string value;
-
-            Assert.ThrowsAny<Exception>(() => service.TryGetSetting("", out value)); //TODO:
-        }
-        */
         [Fact]
         public void TryGetSetting_NoKeyInSettings_HasNullAsOut()
         {
@@ -232,31 +208,7 @@ namespace Crossroads.Microservice.Settings.Tests
 
             service.AddSettings(settings, "test source");
         }
-        /*
-        [Fact]
-        public void AddSettings_NullDictionary_ThrowsException()
-        {
-            var service = new SettingsService();
-            Assert.Throws<Exception>(() => { service.AddSettings(null, "test source"); }); //TODO:
-        }
 
-        [Fact]
-        public void AddSettings_NullSource_ThrowsException()
-        {
-            var service = new SettingsService();
-            var settings = new Dictionary<string, string>();
-            Assert.Throws<Exception>(() => { service.AddSettings(settings, null); }); //TODO:
-        }
-
-        [Fact]
-        public void AddSettings_EmptyStringSource_ThrowsException()
-        {
-            var service = new SettingsService();
-            var settings = new Dictionary<string, string>();
-            Assert.Throws<Exception>(() => { service.AddSettings(settings, ""); }); //TODO:
-        }
-        */
-        //void AddSetting(string key, string value, string source);
         [Fact]
         public void AddSetting_AddOneSetting_GetValue()
         {
@@ -317,43 +269,7 @@ namespace Crossroads.Microservice.Settings.Tests
             Assert.Equal(overwriteTestValueOne, settingOne);
             Assert.Equal(testValueTwo, settingTwo);
         }
-        /*
-        [Fact]
-        public void AddSetting_NullKey_ThrowsException()
-        {
-            var service = new SettingsService();
-            Assert.Throws<Exception>(() => { service.AddSetting(null, "value", "test source"); }); //TODO:
-        }
 
-        [Fact]
-        public void AddSetting_NullValue_ThrowsException()
-        {
-            var service = new SettingsService();
-            Assert.Throws<Exception>(() => { service.AddSetting("key", null, "test source"); }); //TODO:
-        }
-
-        [Fact]
-        public void AddSetting_NullSource_ThrowsException()
-        {
-            var service = new SettingsService();
-            Assert.Throws<Exception>(() => { service.AddSetting("key", "value", null); }); //TODO:
-        }
-
-        [Fact]
-        public void AddSetting_EmptyStringKey_ThrowsException()
-        {
-            var service = new SettingsService();
-
-            Assert.Throws<Exception>(() => { service.AddSetting("", "value", "test source"); }); //TODO:
-        }
-
-        [Fact]
-        public void AddSetting_EmptyStringSource_ThrowsException()
-        {
-            var service = new SettingsService();
-            Assert.Throws<Exception>(() => { service.AddSetting("key", "value", ""); }); //TODO:
-        }
-        */
         [Fact]
         public void GetVaultPath_NoValue()
         {

@@ -17,7 +17,6 @@ namespace Crossroads.Microservice.Settings.Services
 {
     public class SettingsService: ISettingsService
     {
-        //TODO: Make sure this is testable = interface
         private static NLog.ILogger _logger;
 
         private readonly Dictionary<string,string> _appSettings;
