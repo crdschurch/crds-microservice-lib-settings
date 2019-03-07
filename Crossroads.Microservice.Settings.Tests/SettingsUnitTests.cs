@@ -10,20 +10,6 @@ namespace Crossroads.Microservice.Settings.Tests
 {
     public class UnitTest1
     {
-
-        [Fact]
-        public void OverwriteSetting()
-        {
-
-            var service = new SettingsService(null);
-
-            service.AddSetting("testKey","value1", "testsource");
-            service.AddSetting("testKey", "value2", "testsource");
-
-            Assert.Equal(service.GetSetting("testKey"), "value2");
-
-        }
-
         [Fact]
         public void CreateService_PassLogger()
         {
