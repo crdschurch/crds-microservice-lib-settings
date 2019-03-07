@@ -12,10 +12,16 @@ namespace Crossroads.Microservice.Settings.Tests
     {
 
         [Fact]
-        public void CreateService_NullLogger()
+        public void OverwriteSetting()
         {
-            //TODO:
+
             var service = new SettingsService(null);
+
+            service.AddSetting("testKey","value1", "testsource");
+            service.AddSetting("testKey", "value2", "testsource");
+
+            Assert.Equal(service.GetSetting("testKey"), "value2");
+
         }
 
         [Fact]
@@ -37,8 +43,6 @@ namespace Crossroads.Microservice.Settings.Tests
             var logger = NLogBuilder.ConfigureNLog(loggingConfig).GetCurrentClassLogger();
 
             var service = new SettingsService(logger);
-
-            //TODO: How do we actual test this works?
         }
 
         [Fact]
@@ -79,7 +83,7 @@ namespace Crossroads.Microservice.Settings.Tests
 
             string value;
 
-            Assert.ThrowsAny<Exception>(() => service.TryGetSetting(null, out value)); //TODO:
+            Assert.ThrowsAny<Exception>(() => service.TryGetSetting(null, out value)); 
         }
 
         [Fact]

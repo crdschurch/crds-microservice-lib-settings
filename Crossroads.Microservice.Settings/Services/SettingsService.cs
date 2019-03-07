@@ -30,7 +30,6 @@ namespace Crossroads.Microservice.Settings.Services
                 logger = GetLogger();
             }
 
-            //TODO: check to make sure this is legit
             _logger = (NLog.Logger)logger;
 
             _appSettings = new Dictionary<string, string>();
@@ -68,10 +67,10 @@ namespace Crossroads.Microservice.Settings.Services
 
         public void AddSettings(Dictionary<string, string> settings, string source)
         {
-            //TODO: Test for nulls
 
             foreach (var setting in settings)
             {
+                //Set the source to null, so it won't log for every setting we are setting
                 AddSetting(setting.Key, setting.Value, null);
             }
 
@@ -86,11 +85,11 @@ namespace Crossroads.Microservice.Settings.Services
                 AlertDuplicateKey(key, source);
 
             }
-            //TODO: Check to see what happens when this exists
             _appSettings[key] = value;
 
             if (!string.IsNullOrEmpty(source))
             {
+                //Only Log the source if there is a source
                 _logger.Info("Added setting from " + source);
             }
 
