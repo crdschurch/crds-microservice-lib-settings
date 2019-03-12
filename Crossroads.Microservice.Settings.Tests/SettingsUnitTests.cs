@@ -1,7 +1,7 @@
 using System;
 using Xunit;
 using System.Collections.Generic;
-using Crossroads.Microservice.Settings.Services;
+using Crossroads.Microservice.Settings;
 using NLog.Config;
 using NLog.Targets;
 using NLog.Web;

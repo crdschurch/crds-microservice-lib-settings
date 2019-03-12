@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Crossroads.Microservice.Services
+namespace Crossroads.Microservice.Settings
 {
     public interface ISettingsService
     {
