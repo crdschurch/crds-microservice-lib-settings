@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Security;
-using Crossroads.Microservice.Services;
 using NLog.Config;
 using NLog.Targets;
 using NLog.Web;
@@ -13,7 +12,7 @@ using VaultSharp.V1.AuthMethods.AppRole;
 
 [assembly: InternalsVisibleTo("Crossroads.Microservice.Settings.Tests")]
 
-namespace Crossroads.Microservice.Settings.Services
+namespace Crossroads.Microservice.Settings
 {
     public class SettingsService: ISettingsService
     {
@@ -92,7 +91,6 @@ namespace Crossroads.Microservice.Settings.Services
                 //Only Log the source if there is a source
                 _logger.Info("Added setting from " + source);
             }
-
         }
 
         private static NLog.Logger GetLogger()
