@@ -138,6 +138,7 @@ namespace Crossroads.Microservice.Settings
             if (!TryGetSetting("CRDS_ENV", out var environment))
             {
                 environment = "local";
+                AddSetting("CRDS_ENV", environment, "Internal");
             }
 
             _logger.Info($"Getting settings for {environment} environment");
@@ -186,7 +187,6 @@ namespace Crossroads.Microservice.Settings
             var vaultSettings = new Dictionary<string, string>();
 
             var nameOfThisApplication = System.Reflection.Assembly.GetEntryAssembly().GetName().Name;
-
 
             vaultSettings = GetSettingsFromVault(nameOfThisApplication);
 
