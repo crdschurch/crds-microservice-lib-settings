@@ -138,10 +138,8 @@ namespace Crossroads.Microservice.Settings
             if (!TryGetSetting("CRDS_ENV", out var environment))
             {
                 environment = "local";
-                AddSetting("CRDS_ENV", environment, "Internal");
+                AddSetting("CRDS_ENV", environment, "SettingsService");
             }
-
-            _logger.Info($"Getting settings for {environment} environment");
 
             return environment;
         }
@@ -204,6 +202,8 @@ namespace Crossroads.Microservice.Settings
 
             var environment = GetCrdsEnv();
 
+            _logger.Info($"Getting Vault settings from bucket: {bucket} for {environment} environment");
+
             try
             {
                 var vaultRoleId = GetSetting("VAULT_ROLE_ID");
@@ -241,6 +241,8 @@ namespace Crossroads.Microservice.Settings
 
             _logger.Warn("VAULT_URI not set, defaulting to https://vault.crossroads.net");
             vaultPath = "https://vault.crossroads.net";
+
+            AddSetting("VAULT_URI", vaultPath, "SettingsService");
 
             return vaultPath;
         }
