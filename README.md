@@ -37,10 +37,10 @@ public OktaRegistrationService(ISettingsService settingsService)
 
 Functions available are:
 
-`string GetSetting(string setting)`
-`bool TryGetSetting(string setting, out string value)`
-`void AddSettings(Dictionary<string, string> settings, string source)`
-`void AddSetting(string key, string value, string source)`
+- `string GetSetting(string setting)`
+- `bool TryGetSetting(string setting, out string value)`
+- `void AddSettings(Dictionary<string, string> settings, string source)`
+- `void AddSetting(string key, string value, string source)`
 
 Usage example:
 `var secretSetting = _settingsService.GetSetting('SECRET_KEY');`
