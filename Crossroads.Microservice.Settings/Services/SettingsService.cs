@@ -29,7 +29,7 @@ namespace Crossroads.Microservice.Settings
 
             if (!string.IsNullOrEmpty(vaultSecret))
             {
-                Environment.SetEnvironmentVariable("VAULT_SECRET_ID", vaultRoleId);
+                Environment.SetEnvironmentVariable("VAULT_SECRET_ID", vaultSecret);
             }
 
             if (logger == null)
