@@ -20,9 +20,17 @@ namespace Crossroads.Microservice.Settings
 
         private readonly Dictionary<string,string> _appSettings;
 
+        public SettingsService(string vaultRoleId, string vaultSecret, NLog.ILogger logger = null)
+        {
+            if (!string.IsNullOrEmpty(vaultRoleId))
+            {
+                Environment.SetEnvironmentVariable("VAULT_ROLE_ID", vaultRoleId);
+            }
 
-        public SettingsService(NLog.ILogger logger = null)
-        { 
+            if (!string.IsNullOrEmpty(vaultSecret))
+            {
+                Environment.SetEnvironmentVariable("VAULT_SECRET_ID", vaultRoleId);
+            }
 
             if (logger == null)
             {
@@ -41,7 +49,11 @@ namespace Crossroads.Microservice.Settings
 
             var vaultApplicationSettings = GetApplicationSettingsFromVault();
             AddSettings(vaultApplicationSettings, "Vault Application Settings");
+        }
 
+        public SettingsService(NLog.ILogger logger = null) : this (null, null, logger)
+        {
+            
         }
 
         public string GetSetting(string key)

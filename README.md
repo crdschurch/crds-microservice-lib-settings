@@ -7,9 +7,17 @@ This settings library is meant to standardize the access of application settings
 The library can be initialized by pasting the following lines into the `ConfigureServices` function in your StartUp file.
 
 ```
-SettingsService settingsService = new SettingsService();
-services.AddSingleton<ISettingsService>(settingsService);
+SettingsConfiguration.Register();
 ```
+or if you want to explicitly define the vault role id and secret
+```
+SettingsConfiguration.Register("vault_role_id", "vault_secret");
+```
+or if you also want to pass in a logger to log initialization errors. By default it will log to stdout
+```
+SettingsConfiguration.Register("vault_role_id", "vault_secret", logger);
+```
+
 
 You will need to use the `Crossroads.Microservice.Settings` namespace.
 
@@ -18,6 +26,7 @@ You will also need two environment variables set so that the settings service ca
 `VAULT_ROLE_ID`
 `VAULT_SECRET_ID`
 
+Alternatively you can pass them into the register function as shown above.
 If you don't have those values reach out to other developers.
 
 Optionally you can provide the `VAULT_URI`, however it defaults to the current server location.
